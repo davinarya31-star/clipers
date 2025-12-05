@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>* {
+    <title>AI Clipping System - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/splitting@1.0.6/dist/splitting.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
             font-family: 'Inter', sans-serif;
         }
         
@@ -99,10 +110,11 @@
             left: 0;
             z-index: 1;
             opacity: 0.4;
-        }</style>
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 nav-blur border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -174,14 +186,280 @@
                         </div>
                     </div>
                 </div>
-    <h1>brand makanan viral</h1>
-    <h2>kurang gizi</h2>
-    <h1>harus banyak makan</h1>
-    <table>
-        <h1>sule</h1>
-        <h1>prikitiw
-            <h1>pantek</h1>
-        </h1>
-    </table>
+                <div class="relative">
+                    <div class="floating-element">
+                        <img src="resources/hero-image.png" alt="AI Clipping Interface" class="w-full h-auto rounded-2xl shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload-section" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4 gradient-text">Upload Your Content</h2>
+                <p class="text-xl text-gray-300">Drag and drop your videos or click to browse files</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Upload Mode Selection -->
+                <div class="flex justify-center mb-6">
+                    <div class="glass-effect rounded-lg p-1 flex">
+                        <button id="file-mode-btn" class="px-6 py-2 rounded-md bg-blue-600 text-white font-medium transition-all" onclick="switchUploadMode('file')">
+                            Upload Files
+                        </button>
+                        <button id="url-mode-btn" class="px-6 py-2 rounded-md text-gray-300 hover:text-white font-medium transition-all" onclick="switchUploadMode('url')">
+                            URL Input
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Upload Zone -->
+                <div id="file-upload-zone" class="upload-zone rounded-2xl p-12 text-center cursor-pointer">
+                    <div class="space-y-6">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-2">Drop your videos here</h3>
+                            <p class="text-gray-400 mb-4">Supports MP4, MOV, AVI, MKV up to 1TB</p>
+                            <button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors">
+                                Choose Files
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- URL Input Zone -->
+                <div id="url-input-zone" class="upload-zone rounded-2xl p-12 text-center hidden">
+                    <div class="space-y-6">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-pink-500 rounded-full flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-2">Enter Video URL</h3>
+                            <p class="text-gray-400 mb-4">Support YouTube, Vimeo, and direct video URLs</p>
+                            <div class="max-w-md mx-auto">
+                                <input type="url" id="url-input" placeholder="https://youtube.com/watch?v=..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-blue-500 focus:outline-none mb-4">
+                                <button onclick="processURL()" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors w-full">
+                                    Process URL
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-sm text-gray-400 mb-2">Or paste multiple URLs (one per line):</p>
+                                <textarea id="url-multiple-input" placeholder="https://youtube.com/watch?v=example1&#10;https://vimeo.com/example2&#10;https://example.com/video.mp4" class="w-full h-24 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-blue-500 focus:outline-none text-sm resize-none"></textarea>
+                                <button onclick="processMultipleURLs()" class="mt-3 px-6 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg font-medium transition-colors">
+                                    Process Multiple URLs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Progress -->
+                <div id="upload-progress" class="hidden mt-8 space-y-4">
+                    <div class="glass-effect rounded-lg p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">Uploading video.mp4</span>
+                            <span class="text-sm text-gray-400">75%</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="progress-bar rounded-full h-2" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing Queue -->
+    <section class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4 gradient-text">Processing Queue</h2>
+                <p class="text-xl text-gray-300">Real-time AI analysis and clip generation</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="glass-effect rounded-lg p-6 card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">AI Scene Detection</h3>
+                            <span class="px-3 py-1 bg-emerald-500 text-white text-sm rounded-full">Active</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span>Analyzing video content</span>
+                                <span class="text-emerald-400">87%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-emerald-500 rounded-full h-2 transition-all duration-500" style="width: 87%"></div>
+                            </div>
+                            <p class="text-xs text-gray-400">Detected 23 scene changes, 8 key moments</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-effect rounded-lg p-6 card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Clip Generation</h3>
+                            <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">Processing</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span>Creating optimized clips</span>
+                                <span class="text-blue-400">45%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-blue-500 rounded-full h-2 transition-all duration-500" style="width: 45%"></div>
+                            </div>
+                            <p class="text-xs text-gray-400">Generated 12 clips, 3:24 total duration</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Recent Projects</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors cursor-pointer">
+                            <div class="w-16 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex-shrink-0"></div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Product Demo 2024</h4>
+                                <p class="text-sm text-gray-400">8 clips • 2:45 duration</p>
+                            </div>
+                            <span class="text-emerald-400 text-sm">Ready</span>
+                        </div>
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors cursor-pointer">
+                            <div class="w-16 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex-shrink-0"></div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Interview Highlights</h4>
+                                <p class="text-sm text-gray-400">5 clips • 1:32 duration</p>
+                            </div>
+                            <span class="text-emerald-400 text-sm">Ready</span>
+                        </div>
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors cursor-pointer">
+                            <div class="w-16 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex-shrink-0"></div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Webinar Recording</h4>
+                                <p class="text-sm text-gray-400">Processing...</p>
+                            </div>
+                            <span class="text-blue-400 text-sm">45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 gradient-text">AI-Powered Features</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Advanced machine learning algorithms that understand your content and create engaging clips automatically
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Smart Scene Detection</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        AI automatically identifies scene changes, speaker transitions, and key moments to create perfectly timed clips.
+                    </p>
+                </div>
+
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Emotional Analysis</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Machine learning analyzes facial expressions and audio patterns to identify the most engaging and emotional moments.
+                    </p>
+                </div>
+
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instant Processing</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Powerful cloud infrastructure processes videos 24/7, delivering clips in minutes rather than hours.
+                    </p>
+                </div>
+
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-orange-600 to-orange-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Multi-Format Export</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Export clips in various formats optimized for different platforms: Instagram, TikTok, YouTube, and more.
+                    </p>
+                </div>
+
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Custom Workflows</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Create custom automation rules and templates to match your specific content creation needs and brand guidelines.
+                    </p>
+                </div>
+
+                <div class="glass-effect rounded-xl p-8 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-pink-600 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Team Collaboration</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Share projects, collaborate on edits, and manage team workflows with built-in collaboration tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-emerald-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">AI</span>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">ClipMaster AI</span>
+                </div>
+                <p class="text-gray-400 mb-6">Transforming video content creation with artificial intelligence</p>
+                <p class="text-sm text-gray-500">© 2024 ClipMaster AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>
